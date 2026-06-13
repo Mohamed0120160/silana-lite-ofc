@@ -1,5 +1,4 @@
 
-
 import { EventEmitter } from 'events';
 
 EventEmitter.setMaxListeners(0);
@@ -314,31 +313,18 @@ global.reloadHandler = async function(restatConn) {
     }
     if (!isInit) {
         conn.ev.off('messages.upsert', conn.handler)
-        conn.ev.off('group-participants.update', conn.participantsUpdate)
-        conn.ev.off('message.update', conn.pollUpdate);
-        conn.ev.off('groups.update', conn.groupsUpdate)
-        conn.ev.off('message.delete', conn.onDelete)
         conn.ev.off('connection.update', conn.connectionUpdate)
         conn.ev.off('creds.update', conn.credsUpdate)
     }
-    conn.welcome = 'مرحبا بك في أقوى مجموعة لبوتات الواتساب الرجاء قراءة قوانين المجموعة حتى لا يتم طردك  ، سيلانا اول بوت واتساب في الوطن العربي \n\n welcome to the groupe please read the rules of the group\n\n\n @subject, @user\n'
-    conn.bye = '\n  مع السلامة  اتمنى ألا تعود الى هـــــــــنا \n@user 👋'
-    conn.spromote = '@user *يرقي* إلى المشرف '
-    conn.sdemote = '@user *خفض الرتبة* من المشرف'
-    conn.sDesc = 'تم تغيير الوصف إلى \n@desc'
-    conn.sSubject = 'تم تغيير اسم المجموعة إلى \n@subject'
-    conn.sIcon = 'تم تغيير الصورة الجماعية!'
-    conn.sRevoke = 'تم تغيير رابط المجموعة إلى \n@revoke'
-    conn.sAnnounceOn = 'تم إغلاق المجموعة!\الآن يمكن للمسؤولين فقط إرسال الرسائل.'
-    conn.sAnnounceOff = 'المجموعة مفتوحة!\nالآن يمكن لجميع المشاركين إرسال الرسائل.'
-    conn.sRestrictOn = 'تم تغيير تعديل معلومات المجموعة إلى المسؤول فقط!'
-    conn.sRestrictOff = 'تم تغيير تعديل معلومات المجموعة لجميع المشاركين!'
+    // ============================================================
+    // ملحوظة: تم حذف رسائل welcome/bye/spromote/sdemote/sDesc/sSubject/
+    // sIcon/sRevoke/sAnnounceOn/Off/sRestrictOn/Off من هنا، لأنها كانت
+    // مستخدمة فقط من قبل participantsUpdate و groupsUpdate المحذوفين من
+    // handler.js. لو احتجت هذه الميزات لاحقاً كـ plugin مستقل (event-based)،
+    // يمكن إعادة تعريف هذه النصوص داخل ذلك الـ plugin نفسه.
+    // ============================================================
 
     conn.handler = handler.handler.bind(global.conn)
-    conn.participantsUpdate = handler.participantsUpdate.bind(global.conn)
-    conn.groupsUpdate = handler.groupsUpdate.bind(global.conn)
-    conn.pollUpdate = handler.pollUpdate.bind(global.conn);
-    conn.onDelete = handler.deleteUpdate.bind(global.conn)
     conn.connectionUpdate = connectionUpdate.bind(global.conn)
     conn.credsUpdate = saveCreds.bind(global.conn)
 
@@ -351,10 +337,6 @@ global.reloadHandler = async function(restatConn) {
     }
 
     conn.ev.on('messages.upsert', conn.handler)
-    conn.ev.on('group-participants.update', conn.participantsUpdate)
-    conn.ev.on('messages.update', conn.pollUpdate);
-    conn.ev.on('groups.update', conn.groupsUpdate)
-    conn.ev.on('message.delete', conn.onDelete)
     conn.ev.on('connection.update', conn.connectionUpdate)
     conn.ev.on('creds.update', conn.credsUpdate)
     isInit = false
